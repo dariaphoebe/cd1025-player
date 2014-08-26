@@ -26,7 +26,7 @@ $(document).ready(function(){
 	function queryCD1025(){
 		$.ajax({
 			type: "GET",
-			url: "http://cd1025.com/a/refresh",
+			url: "/cgi-bin/cd1025",
 			success: function(data){
 				$(data).find(".artist").each(function(i, element){
 					if(i === 0){
