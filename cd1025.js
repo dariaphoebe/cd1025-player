@@ -5,7 +5,7 @@ $(document).ready(function(){
 	var firstPlay = true;
 	var player;
 
-	// Fire the queryCD1025 function every 10 seconds
+	// Fire the queryCD1025 function every 5 seconds
 	var mainInterval = setInterval(function(){
 		queryCD1025();
 		writePlaylist();
