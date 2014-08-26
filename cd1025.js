@@ -5,14 +5,11 @@ $(document).ready(function(){
 	var firstPlay = true;
 	var player;
 
-
-	//queryX1067();
 	// Fire the queryCD1025 function every 10 seconds
 	var mainInterval = setInterval(function(){
 		queryCD1025();
 		writePlaylist();
-		console.log(playlist);
-	},1000);
+	},5000);
 	
 	// Write the playlist array to the DOM
 	function writePlaylist(){
@@ -26,17 +23,15 @@ $(document).ready(function(){
 	function queryCD1025(){
 		$.ajax({
 			type: "GET",
-			url: "/cgi-bin/cd1025",
+			url: "http://cd1025.com/a/refresh",
 			success: function(data){
-				$(data).find(".artist").each(function(i, element){
+				$(data.responseText).find(".artist").each(function(i, element){
 					if(i === 0){
 						// Grab the song data from the AJAX response
 						var artistNow = $(this).text().replace("Artist: ","");
 						var songNow = $(this).next().text().replace("Song: ","");
-						console.log(artistNow + " - " + songNow);
 						// Determine if there is a new song
 						if(artist != artistNow && song != songNow){
-							console.log("New song");
 							// Assign the new current song playing
 							artist = $(this).text().replace('Artist: ','');
 							song = $(this).next().text().replace('Song: ','');	
@@ -45,14 +40,10 @@ $(document).ready(function(){
 						}
 					}	
 				});
-				//$(data).find(".artist").each(function(i, element){
-				//	console.log(i + ": " + $(this).text().replace("Artist: ",""));
-				//	console.log(i+ ": " + $(this).next().text().replace("Song: ",""));
-				//});
 			}
 		});
 	}
-
+	
 	function queryX1067(){
 		$.ajax({
 			type: "GET",
@@ -78,7 +69,6 @@ $(document).ready(function(){
 				// Parse out the ID and duration from the json response
 				var youTubeID = data.data.items[0].id;
 				var duration = data.data.items[0].duration;
-				console.log(youTubeID);
 				// If this is a new session manually load the YouTube player with a song
 				if(firstPlay){
 					player.loadVideoById("UVYw6YY_3mI", 0, "large");
