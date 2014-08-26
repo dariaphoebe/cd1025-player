@@ -104,6 +104,17 @@ $(document).ready(function(){
 		});
 	}
 	
+	$("input[name='Next']").click(function() {
+	                   if(!playlist.length){
+	                           player.loadVideoById("UVYw6YY_3mI", 0, "large");
+	                           queryCD1025();
+	                           writePlaylist();
+	                           console.log(playlist);
+	                   }
+	                   player.loadVideoById(playlist[0].id, 0, "large");
+	                   playlist.shift();
+	});
+
 	window.onPlayerError = function(event) {
                        if(!playlist.length){
                                player.loadVideoById("UVYw6YY_3mI", 0, "large");
