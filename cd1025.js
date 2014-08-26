@@ -115,6 +115,31 @@ $(document).ready(function(){
 	                   playlist.shift();
 	});
 
+	$("input[name='Reset']").click(function() {
+		player.destroy();
+		player = new YT.Player('player', {
+			height: '390',
+			width: '640',
+			playerVars: {
+			    'playsinline' : 1,
+			    'enablejsapi' : 1,
+			    'controls' : 1
+			},
+			events: {
+			    'onError': onPlayerError,
+			    'onStateChange': onPlayerStateChange
+			}
+		});
+		if(!playlist.length){
+		    player.loadVideoById("UVYw6YY_3mI", 0, "large");
+		    queryCD1025();
+		    writePlaylist();
+		    console.log(playlist);
+		}
+		player.loadVideoById(playlist[0].id, 0, "large");
+		playlist.shift();
+	});
+
 	window.onPlayerError = function(event) {
                        if(!playlist.length){
                                player.loadVideoById("UVYw6YY_3mI", 0, "large");
