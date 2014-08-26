@@ -93,11 +93,23 @@ $(document).ready(function(){
 			height: '390',
 			width: '640',
 			events: {
-				'onStateChange': onPlayerStateChange
+			    'onError': onPlayerError,
+			    'onStateChange': onPlayerStateChange
 			}
 		});
 	}
 	
+	window.onPlayerError = function(event) {
+                       if(!playlist.length){
+                               player.loadVideoById("UVYw6YY_3mI", 0, "large");
+                               queryCD1025();
+                               writePlaylist();
+                               console.log(playlist);
+                       }
+                       player.loadVideoById(playlist[0].id, 0, "large");
+                       playlist.shift();
+       }
+
 	// Load up the next song in the playlist when the current one is over
 	window.onPlayerStateChange = function(event) {
 		// Check if the state change is the song ending
