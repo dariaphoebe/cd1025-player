@@ -60,10 +60,9 @@ $(document).ready(function(){
 			
 	// Query YouTube with the latest played song returned by queryCD1025 to get a youtube video ID
 	function queryYoutube(artistq, songq){
-		qURL = "https://gdata.youtube.com/feeds/api/videos?q="+artistq+" "+songq+"&v=2&alt=jsonc";
 		$.ajax({
 			type: "GET",
-			url: qURL,
+			url: "https://gdata.youtube.com/feeds/api/videos?q="+ encodeURIComponent(artistq) +" "+ encodeURIComponent(songq) +"&v=2&alt=jsonc",
 			dataType: "json",
 			success: function(data){
 				// Parse out the ID and duration from the json response
