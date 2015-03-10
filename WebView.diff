@@ -1,0 +1,168 @@
+diff -ur WebView/WebView/AppDelegate.m WebView/WebView/AppDelegate.m
+--- WebView/WebView/AppDelegate.m	2013-10-04 13:45:29.000000000 -0400
++++ WebView/WebView/AppDelegate.m	2014-08-25 22:12:03.000000000 -0400
+@@ -7,11 +7,28 @@
+ //
+ 
+ #import "AppDelegate.h"
++#import <AVFoundation/AVFoundation.h>
++#import <AudioToolbox/AudioToolbox.h>
++
++
+ 
+ @implementation AppDelegate
+ 
+ - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
+ {
++    AVAudioSession *audioSession = [AVAudioSession sharedInstance];
++    NSError *setCategoryError = nil;
++    
++    BOOL success = [audioSession setCategory:AVAudioSessionCategoryPlayback error:&setCategoryError];
++    
++    if (!success) { /* handle the error condition */ }
++    
++    NSError *activationError = nil;
++    
++    success = [audioSession setActive:YES error:&activationError];
++    
++    if (!success) { /* handle the error condition */ }
++    
+     // Override point for customization after application launch.
+     return YES;
+ }
+@@ -26,7 +43,8 @@
+ {
+     // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later. 
+     // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
+-}
++    
++    }
+ 
+ - (void)applicationWillEnterForeground:(UIApplication *)application
+ {
+diff -ur WebView/WebView/ViewController.m WebView/WebView/ViewController.m
+--- WebView/WebView/ViewController.m	2013-10-04 19:24:42.000000000 -0400
++++ WebView/WebView/ViewController.m	2014-08-20 06:57:41.000000000 -0400
+@@ -17,9 +17,11 @@
+ - (void)viewDidLoad
+ {
+     [super viewDidLoad];
+-    NSString *fullURL = @"http://conecode.com";
++    NSString *fullURL = @"http://www.dementix.org/~shadow/cd1025/cd1025-player.html";
+     NSURL *url = [NSURL URLWithString:fullURL];
+     NSURLRequest *requestObj = [NSURLRequest requestWithURL:url];
++    _viewWeb.allowsInlineMediaPlayback = YES;
++    _viewWeb.mediaPlaybackRequiresUserAction = NO;
+     [_viewWeb loadRequest:requestObj];
+ }
+ 
+diff -ur WebView/WebView/WebView-Info.plist WebView/WebView/WebView-Info.plist
+--- WebView/WebView/WebView-Info.plist	2013-10-04 13:45:29.000000000 -0400
++++ WebView/WebView/WebView-Info.plist	2014-08-25 21:54:24.000000000 -0400
+@@ -9,7 +9,7 @@
+ 	<key>CFBundleExecutable</key>
+ 	<string>${EXECUTABLE_NAME}</string>
+ 	<key>CFBundleIdentifier</key>
+-	<string>chrisserra.${PRODUCT_NAME:rfc1034identifier}</string>
++	<string>com.your-file-system.cd101.${PRODUCT_NAME:rfc1034identifier}</string>
+ 	<key>CFBundleInfoDictionaryVersion</key>
+ 	<string>6.0</string>
+ 	<key>CFBundleName</key>
+@@ -24,6 +24,11 @@
+ 	<string>1.0</string>
+ 	<key>LSRequiresIPhoneOS</key>
+ 	<true/>
++	<key>UIBackgroundModes</key>
++	<array>
++		<string>audio</string>
++		<string>fetch</string>
++	</array>
+ 	<key>UIMainStoryboardFile</key>
+ 	<string>Main_iPhone</string>
+ 	<key>UIMainStoryboardFile~ipad</key>
+diff -ur WebView/WebView.xcodeproj/project.pbxproj WebView/WebView.xcodeproj/project.pbxproj
+--- WebView/WebView.xcodeproj/project.pbxproj	2013-10-04 13:45:29.000000000 -0400
++++ WebView/WebView.xcodeproj/project.pbxproj	2014-10-23 15:37:52.000000000 -0400
+@@ -22,6 +22,8 @@
+ 		B293DD1717FF363900E3FC40 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B293DCF617FF363900E3FC40 /* UIKit.framework */; };
+ 		B293DD1F17FF363900E3FC40 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = B293DD1D17FF363900E3FC40 /* InfoPlist.strings */; };
+ 		B293DD2117FF363900E3FC40 /* WebViewTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B293DD2017FF363900E3FC40 /* WebViewTests.m */; };
++		BF9545B019AC20B800669E34 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BF9545AF19AC20B800669E34 /* AVFoundation.framework */; };
++		BF9545B219AC20BD00669E34 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BF9545B119AC20BD00669E34 /* AudioToolbox.framework */; };
+ /* End PBXBuildFile section */
+ 
+ /* Begin PBXContainerItemProxy section */
+@@ -55,6 +57,8 @@
+ 		B293DD1C17FF363900E3FC40 /* WebViewTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "WebViewTests-Info.plist"; sourceTree = "<group>"; };
+ 		B293DD1E17FF363900E3FC40 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+ 		B293DD2017FF363900E3FC40 /* WebViewTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WebViewTests.m; sourceTree = "<group>"; };
++		BF9545AF19AC20B800669E34 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
++		BF9545B119AC20BD00669E34 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
+ /* End PBXFileReference section */
+ 
+ /* Begin PBXFrameworksBuildPhase section */
+@@ -62,6 +66,8 @@
+ 			isa = PBXFrameworksBuildPhase;
+ 			buildActionMask = 2147483647;
+ 			files = (
++				BF9545B219AC20BD00669E34 /* AudioToolbox.framework in Frameworks */,
++				BF9545B019AC20B800669E34 /* AVFoundation.framework in Frameworks */,
+ 				B293DCF517FF363900E3FC40 /* CoreGraphics.framework in Frameworks */,
+ 				B293DCF717FF363900E3FC40 /* UIKit.framework in Frameworks */,
+ 				B293DCF317FF363900E3FC40 /* Foundation.framework in Frameworks */,
+@@ -103,6 +109,8 @@
+ 		B293DCF117FF363900E3FC40 /* Frameworks */ = {
+ 			isa = PBXGroup;
+ 			children = (
++				BF9545B119AC20BD00669E34 /* AudioToolbox.framework */,
++				BF9545AF19AC20B800669E34 /* AVFoundation.framework */,
+ 				B293DCF217FF363900E3FC40 /* Foundation.framework */,
+ 				B293DCF417FF363900E3FC40 /* CoreGraphics.framework */,
+ 				B293DCF617FF363900E3FC40 /* UIKit.framework */,
+@@ -202,6 +210,14 @@
+ 				LastUpgradeCheck = 0500;
+ 				ORGANIZATIONNAME = "Chris Serra";
+ 				TargetAttributes = {
++					B293DCEE17FF363900E3FC40 = {
++						DevelopmentTeam = L2TGP62ZXS;
++						SystemCapabilities = {
++							com.apple.BackgroundModes = {
++								enabled = 1;
++							};
++						};
++					};
+ 					B293DD1217FF363900E3FC40 = {
+ 						TestTargetID = B293DCEE17FF363900E3FC40;
+ 					};
+@@ -395,6 +411,7 @@
+ 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+ 				GCC_PREFIX_HEADER = "WebView/WebView-Prefix.pch";
+ 				INFOPLIST_FILE = "WebView/WebView-Info.plist";
++				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
+ 				PRODUCT_NAME = "$(TARGET_NAME)";
+ 				WRAPPER_EXTENSION = app;
+ 			};
+@@ -408,6 +425,7 @@
+ 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+ 				GCC_PREFIX_HEADER = "WebView/WebView-Prefix.pch";
+ 				INFOPLIST_FILE = "WebView/WebView-Info.plist";
++				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
+ 				PRODUCT_NAME = "$(TARGET_NAME)";
+ 				WRAPPER_EXTENSION = app;
+ 			};
+@@ -474,6 +492,7 @@
+ 				B293DD2617FF363900E3FC40 /* Release */,
+ 			);
+ 			defaultConfigurationIsVisible = 0;
++			defaultConfigurationName = Release;
+ 		};
+ 		B293DD2717FF363900E3FC40 /* Build configuration list for PBXNativeTarget "WebViewTests" */ = {
+ 			isa = XCConfigurationList;
+@@ -482,6 +501,7 @@
+ 				B293DD2917FF363900E3FC40 /* Release */,
+ 			);
+ 			defaultConfigurationIsVisible = 0;
++			defaultConfigurationName = Release;
+ 		};
+ /* End XCConfigurationList section */
+ 	};
