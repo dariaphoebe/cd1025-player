@@ -58,6 +58,20 @@ $(document).ready(function(){
 		});		
 	}
 			
+	function queryCD1025hist(){
+		$.ajax({
+			type: "GET",
+			    url: "http://www.cd1025.com/about/playlists/history",
+			success: function(data){
+			    // Grab the song data from the AJAX response
+			    var artistHist = $(wholelist).children('td').eq(1).text();
+			    var songHist = $(wholelist).children('td').eq(2).text();
+			    console.log(artistHist + " - " + songHist);
+			    queryYoutube(artistHist, songHist);
+			}
+		});		
+	}
+			
 	// Query YouTube with the latest played song returned by queryCD1025 to get a youtube video ID
 	function queryYoutube(artistq, songq){
 		$.ajax({
@@ -158,7 +172,7 @@ $(document).ready(function(){
 			// Check if the playlist is empty
 			if(!playlist.length){
 				player.loadVideoById("UVYw6YY_3mI", 0, "large");
-				queryX1067();
+				queryCD1025hist();
 			}
 			player.loadVideoById(playlist[0].id, 0, "large");
 			playlist.shift();
